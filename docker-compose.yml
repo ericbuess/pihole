@@ -1,0 +1,39 @@
+version: "3"
+
+# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    dns:
+      - 208.67.222.222
+      - 208.67.220.220
+    environment:
+      TZ: 'America/Chicago'
+      #INTERFACE: eth0
+      # WEBPASSWORD: 'set a secure password here or it will be random'
+      WEBPASSWORD: 'changeme'
+      #hostname: pi.hole \
+      #--dns=127.0.0.1 --dns=1.1.1.1 \
+      DNS1: '208.67.222.222'
+      DNS2: '208.67.220.220'
+      #VIRTUAL_HOST: 'pi.hole'
+      #VIRTUAL_PORT: 80
+      #PROXY_LOCATION: 'pi.hole'
+      ServerIP: 192.168.0.104
+      #WEB_PORT: 80
+      DNSMASQ_USER: pihole
+      #ServerIPv6: 'If you have a v6 network set to your servers LAN IPv6 to block IPv6 ads fully'
+    # Volumes store your data between container upgrades
+    volumes:
+      - ./etc-pihole/:/etc/pihole/
+      - ./etc-dnsmasq.d/:/etc/dnsmasq.d/
+      #- ./log/pihole.log:/var/log/pihole.log
+    #  - ./resolv.conf:/etc/resolv.conf
+    #cap_add:
+      #- NET_ADMIN
+    # Recommended but not required (DHCP needs NET_ADMIN)
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    restart: always
+    #privileged: true
+    network_mode: host
